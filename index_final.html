@@ -1,0 +1,28 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>À vos oreilles ! — Grandes Varennes</title><style>*{box-sizing:border-box}body{margin:0;background:#071c31;color:#fff4df;font-family:system-ui,-apple-system,sans-serif}.wrap{max-width:1100px;margin:auto;padding:18px}.hero{background:url('fond.png') center top/100% 100% no-repeat;aspect-ratio:1536/1024;position:relative;border-radius:12px;overflow:hidden}.doors{position:absolute;top:30%;bottom:17%;left:6%;right:6%;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(3,1fr);gap:2.2%}.door{background:rgba(10,39,65,.88);border:1px solid #c7a45c;border-radius:10px;color:#ffe2a0;font-size:clamp(17px,3vw,34px);font-weight:700;cursor:pointer;box-shadow:inset 0 0 14px #0b304d}.door:disabled{opacity:.55;cursor:not-allowed;color:#a8b5c2}.door:focus-visible{outline:3px solid white}.info{text-align:center;line-height:1.5}.panel{background:#102e47;border:1px solid #b9944b;border-radius:14px;padding:20px;margin:16px auto;max-width:650px}.panel h2{margin-top:0}.panel audio{width:100%;margin:14px 0}.panel a{color:#ffe2a0}.hide{display:none}.demo{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px auto;font-size:14px}button.close{background:#e4c178;border:0;border-radius:8px;padding:9px 16px;font-weight:700;cursor:pointer}@media(max-width:600px){.wrap{padding:8px}.hero{aspect-ratio:3/4;background-size:auto 100%;background-position:center}.doors{top:29%;bottom:15%;left:5%;right:5%;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(6,1fr);gap:1.4%}.door{font-size:22px}.info{padding:0 12px}}</style></head><body><main class="wrap"><div class="hero" role="group" aria-label="Calendrier musical du 1er au 18 décembre 2026"><div class="doors" id="doors"></div></div><p class="info">Chaque jour, une musique mystère ! Écoute-la en famille, puis viens souffler ta réponse à l’oreille de la directrice.<br>Les cases déjà ouvertes restent accessibles.</p><section class="panel hide" id="panel" aria-live="polite"><h2 id="day"></h2><p id="question"></p><div id="audioArea"></div><button class="close" id="close">Fermer</button></section></main><script>
+// Extraits MP3 à placer dans le dossier « audio » (sous réserve des autorisations de diffusion).
+const entries=[
+  {question:'De quel film vient cette musique ?',file:'audio/jour1.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour2.mp3'},
+  {question:'Quel groupe interprète cette chanson ?',file:'audio/jour3.mp3'},
+  {question:'Quel est le titre de cette chanson ?',file:'audio/jour4.mp3'},
+  {question:'De quel film vient cette musique ?',file:'audio/jour5.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour6.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour7.mp3'},
+  {question:'Quel est le titre de cette chanson ?',file:'audio/jour8.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour9.mp3'},
+  {question:'De quelle saga vient cette musique ?',file:'audio/jour10.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour11.mp3'},
+  {question:'Quel groupe interprète cette chanson ?',file:'audio/jour12.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour13.mp3'},
+  {question:'De quel dessin animé vient cette chanson ?',file:'audio/jour14.mp3'},
+  {question:'Dans quel film entend-on cette chanson ?',file:'audio/jour15.mp3'},
+  {question:'Qui chante cette chanson ?',file:'audio/jour16.mp3'},
+  {question:'Quel groupe interprète cette chanson ?',file:'audio/jour17.mp3'},
+  {question:'Quelle fête approche dans cette chanson ?',file:'audio/jour18.mp3'}
+];
+const doors=document.getElementById('doors'),panel=document.getElementById('panel');
+function allowed(day){const now=new Date();return (now.getFullYear()>2026 || (now.getFullYear()===2026 && now.getMonth()===11 && now.getDate()>=day))}
+function render(){doors.replaceChildren();entries.forEach((entry,i)=>{const day=i+1,b=document.createElement('button');b.className='door';b.textContent=day;b.disabled=!allowed(day);b.setAttribute('aria-label',`Jour ${day}${b.disabled?' — fermé':' — ouvert'}`);b.addEventListener('click',()=>openDay(day));doors.append(b)})}
+function openDay(day){if(!allowed(day))return;const e=entries[day-1];document.getElementById('day').textContent=`Case ${day} décembre`;document.getElementById('question').textContent=e.question;const area=document.getElementById('audioArea');area.replaceChildren();if(e.file){const audio=document.createElement('audio');audio.controls=true;audio.preload='none';audio.src=e.file;area.append(audio);const note=document.createElement('p');note.textContent='Si le son ne démarre pas, vérifiez que le fichier MP3 a bien été ajouté au dossier audio.';area.append(note)}else{area.textContent='Extrait musical à venir.'}panel.classList.remove('hide');panel.scrollIntoView({behavior:'smooth',block:'nearest'})}
+document.getElementById('close').addEventListener('click',()=>panel.classList.add('hide'));render();
+</script></body></html>
